@@ -48,8 +48,9 @@ namespace proj2
             //var dir = new DirectoryInfo(@"C:\Users\Rana\Desktop\video\enterface database");
             //foreach (var file in dir.EnumerateFiles("*.avi", SearchOption.AllDirectories))
             {
-              // dynamic filename = file.FullName;
-               detector.process(inputfile);
+                // dynamic filename = file.FullName;
+               
+                detector.process(inputfile);
                 Application.Run(feed);
                 //feed.ShowDialog();
                // System.Console.WriteLine("detector reset");

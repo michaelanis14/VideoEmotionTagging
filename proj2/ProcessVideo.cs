@@ -38,7 +38,7 @@ namespace proj2
         private string prefixSurprise = "save recsound C:\\Users\\Rana\\Desktop\\data\\Surprise\\";
         private string prefixFear = "save recsound C:\\Users\\Rana\\Desktop\\data\\Fear\\";
         private string path;
-        private string filepath= @"C:\Users\Rana\Desktop\video\test.mp3";
+        private string filepath = @"C:\Users\Rana\Desktop\video\test.mp3";
         private static string inputfile = "C:\\Users\\Rana\\Desktop\\video\\s23_fe_5.avi";
         private ArrayList f = new ArrayList();
         private ArrayList a = new ArrayList();
@@ -47,7 +47,16 @@ namespace proj2
         private ArrayList h = new ArrayList();
         private ArrayList d = new ArrayList();
         private static Form1 form1 = new Form1();
-        
+        private string result2 = "The Facial classification shows that the dominant emotion is";
+        private string[] result3=new string [5];
+        private string[] result4;
+        private Boolean audio = false;
+        private int facialResult;
+        private int audioResult;
+        private string facialEmotion;
+        private string audioEmotion;
+        //private Boolean[] bools;
+
         //average values
         private int fv;
         private int av;
@@ -58,6 +67,7 @@ namespace proj2
 
         public ProcessVideo(Affdex.VideoDetector detector)
         {
+
             using (Form1 form2 = new Form1())
             {
                 form2.Visible = false;
@@ -75,7 +85,7 @@ namespace proj2
             detector.setImageListener(this);
             detector.setProcessStatusListener(this);
             InitializeComponent();
-           // label2.Text = generateSentence();
+            // label2.Text = generateSentence();
             //mciSendString("open new Type waveaudio alias recsound", null, 0, IntPtr.Zero);
             //button1.Click += new EventHandler(this.button1_Click_1);
             /*var dir = new DirectoryInfo(@"C:\Users\Rana\Desktop\video\enterface database");
@@ -84,7 +94,7 @@ namespace proj2
                 inputfile = file.FullName;
                 changed = !changed;
             }*/
-
+            label11.Visible = false;
         }
         public void camStart()
         {
@@ -110,7 +120,7 @@ namespace proj2
 
                 foreach (KeyValuePair<int, Affdex.Face> pair in faces)
                 {
-                   
+
 
                     Affdex.Face face = pair.Value;
 
@@ -138,7 +148,7 @@ namespace proj2
                     progressBar6.Value = (int)face.Emotions.Sadness;
                     progressBar7.Value = (int)face.Emotions.Disgust;
 
-                   
+
 
                     float engagement = face.Emotions.Engagement;
 
@@ -194,7 +204,7 @@ namespace proj2
                                         }
                                         else
                                         {
-                                              System.Console.WriteLine(inputfile);
+                                            System.Console.WriteLine(inputfile);
                                             filepath = @"C:\Users\Rana\Desktop\data\Neutral\" + inputfile.Substring(28, 8) + ".mp3";
                                             pictureBox2.Image = Image.FromFile("C:\\Users\\Rana\\Documents\\Visual Studio 2015\\Projects\\proj4 - Copy\\proj2\\neutral.png");
                                             label3.Text = "Neutral";
@@ -209,7 +219,7 @@ namespace proj2
                     {
                         foreach (PropertyInfo prop in typeof(Affdex.Emotions).GetProperties())
                         {
-                            
+
                             float value = (float)prop.GetValue(face.Emotions, null);
                             string output = string.Format("{0}:{1:N2}", prop.Name, value);
                             System.Console.WriteLine(output);
@@ -227,27 +237,27 @@ namespace proj2
         private void DrawCapturedImage(Affdex.Frame image)
         {
             // Update the Image control from the UI thread
-          
-                try
-                {
-                    // Update the Image control from the UI thread
-                    //cameraDisplay.Source = rtb;
-                    pictureBox1.Image = BitmapFromSource(ConstructImage(image.getBGRByteArray(), image.getWidth(), image.getHeight()));
 
-                    // Allow N successive OnCapture callbacks before the FacePoint drawing canvas gets cleared.
-                  
+            try
+            {
+                // Update the Image control from the UI thread
+                //cameraDisplay.Source = rtb;
+                pictureBox1.Image = BitmapFromSource(ConstructImage(image.getBGRByteArray(), image.getWidth(), image.getHeight()));
 
-                    if (image != null)
-                    {
-                        image.Dispose();
-                    }
-                }
-                catch (Exception ex)
+                // Allow N successive OnCapture callbacks before the FacePoint drawing canvas gets cleared.
+
+
+                if (image != null)
                 {
-                    String message = String.IsNullOrEmpty(ex.Message) ? "AffdexMe error encountered." : ex.Message;
-                   // ShowExceptionAndShutDown(message);
+                    image.Dispose();
                 }
-           
+            }
+            catch (Exception ex)
+            {
+                String message = String.IsNullOrEmpty(ex.Message) ? "AffdexMe error encountered." : ex.Message;
+                // ShowExceptionAndShutDown(message);
+            }
+
         }
 
         Bitmap BitmapFromSource(BitmapSource bitmapsource)
@@ -278,7 +288,7 @@ namespace proj2
             catch (Exception ex)
             {
                 String message = String.IsNullOrEmpty(ex.Message) ? "AffdexMe error encountered." : ex.Message;
-             //   ShowExceptionAndShutDown(message);
+                //   ShowExceptionAndShutDown(message);
             }
 
             return null;
@@ -291,16 +301,16 @@ namespace proj2
         }
 
         private void button2_Click(object sender, EventArgs e)
-        {   
-            if(label3.Text=="Happy")
+        {
+            if (label3.Text == "Happy")
             {
-                path = prefixJoy +"JOY_"+ count + ".wav";
+                path = prefixJoy + "JOY_" + count + ".wav";
                 mciSendString(path, null, 0, IntPtr.Zero);
                 mciSendString("close recsound", null, 0, IntPtr.Zero);
             }
             else
             {
-                if(label3.Text=="Angry")
+                if (label3.Text == "Angry")
                 {
 
                     path = prefixAnger + "ANGER_" + count + ".wav";
@@ -309,15 +319,15 @@ namespace proj2
                 }
                 else
                 {
-                    if(label3.Text=="Sad")
+                    if (label3.Text == "Sad")
                     {
-                        path = prefixSad +"SAD_"+count + ".wav";
+                        path = prefixSad + "SAD_" + count + ".wav";
                         mciSendString(path, null, 0, IntPtr.Zero);
                         mciSendString("close recsound", null, 0, IntPtr.Zero);
                     }
                     else
                     {
-                        if(label3.Text=="Afraid")
+                        if (label3.Text == "Afraid")
                         {
 
                             path = prefixFear + "FEAR_" + count + ".wav";
@@ -326,7 +336,7 @@ namespace proj2
                         }
                         else
                         {
-                            if(label3.Text=="Disgusted")
+                            if (label3.Text == "Disgusted")
                             {
 
                                 path = prefixDisgust + "Disgust_" + count + ".wav";
@@ -335,7 +345,7 @@ namespace proj2
                             }
                             else
                             {
-                                if(label3.Text=="Surprised")
+                                if (label3.Text == "Surprised")
                                 {
 
                                     path = prefixSurprise + "SURPRISE_" + count + ".wav";
@@ -363,7 +373,7 @@ namespace proj2
 
             if (emotion == 0)
             {
-               //label11.Text = "“You are in a foreign city. A city that contains only one bank, which is open today until 4pm.You need to get 200$ from the bank, in order to buy a flight ticket to go home.You absolutely need your money today. There is no ATM cash machine and you don’t know anyone else in the city. You arrive at the bank at 3pm and see a big queue. After 45 minutes of queuing, when you finally arrive at the counter, the employee tells you to come back the day after because he wants to have a coffee before leaving the bank. You tell him that you need the money today and that the bank should be open for 15 more minutes, but he is just repeating that he does not care about anything else than his coffee...”";
+                //label11.Text = "“You are in a foreign city. A city that contains only one bank, which is open today until 4pm.You need to get 200$ from the bank, in order to buy a flight ticket to go home.You absolutely need your money today. There is no ATM cash machine and you don’t know anyone else in the city. You arrive at the bank at 3pm and see a big queue. After 45 minutes of queuing, when you finally arrive at the counter, the employee tells you to come back the day after because he wants to have a coffee before leaving the bank. You tell him that you need the money today and that the bank should be open for 15 more minutes, but he is just repeating that he does not care about anything else than his coffee...”";
                 string[] anger = new string[30];
                 anger[0] = "What??? No, no, no, listen! I need this money!";
                 anger[1] = "I don't care about your coffee! Please serve me!";
@@ -457,7 +467,7 @@ namespace proj2
         }
 
 
-                private void frm_menu_FormClosing(object sender, FormClosingEventArgs e)
+        private void frm_menu_FormClosing(object sender, FormClosingEventArgs e)
         {
             System.Windows.Forms.Application.Exit();
         }
@@ -487,7 +497,6 @@ namespace proj2
 
         public void onProcessingFinished()
         {
-            //if (ready)
             {
 
                 //Get Arraylists average
@@ -502,7 +511,7 @@ namespace proj2
                 Console.WriteLine(fv - av);
                 Console.WriteLine(fv - hv);
                 Console.WriteLine(fv - dv);
-                Console.WriteLine(fv - sav); 
+                Console.WriteLine(fv - sav);
                 Console.WriteLine(fv - suv);
 
                 Console.WriteLine(av);
@@ -523,92 +532,234 @@ namespace proj2
                 float dominantEmotion1 = emo1.Max();
                 int index1 = emo1.ToList().IndexOf(dominantEmotion1);
 
-                if ((index1 == 0) &&(emo1[index1]!=0))
+                if ((index1 == 0) && (emo1[index1] != 0))
                 {
+                    result2 += " Fear with accuracy of " + fv + " %";
+
                     if ((fv - av <= 20) || (fv - hv <= 20) || (fv - dv <= 20) || (fv - sav <= 20) || (fv - suv <= 20))
                     {
+                        Boolean[] bools = new Boolean[5];
+                        bools[0] = fv - av <= 20;
+                        bools[1] = fv - hv <= 20;
+                        bools[2] = fv - dv <= 20;
+                        bools[3] = fv - sav <= 20;
+                        bools[4] = fv - suv <= 20;
+
+                        result3[0] = "av";
+                        result3[1] = "hv";
+                        result3[2] = "dv";
+                        result3[3] = "sav";
+                        result3[4] = "suv";
+
+                        MessageBox.Show(overlapping(bools,"fv",result3));
+                        label11.Visible = true;
+                        label11.Refresh();
+                        audio = true;
+                        filepath = @"C:\Users\Rana\Desktop\avgdata\audio-classification\" + inputfile.Substring(28, 8) + ".mp3";
+                        convertToMP3(filepath);
+                        File.WriteAllText("C:\\Users\\Rana\\Documents\\Visual Studio 2015\\Projects\\new vid\\filepath.txt", filepath);
                         run_cmd("C:\\Python27\\python.exe", "C:\\Users\\Rana\\Downloads\\ali.py  filepath");
                     }
                     else
                     {
                         label1.Text = "FEAR";
                         filepath = @"C:\Users\Rana\Desktop\avgdata\Fear\" + inputfile.Substring(28, 8) + ".mp3";
+                        label2.Text = result2;
                     }
                 }
                 else
                 {
                     if ((index1 == 1) && (emo1[index1] != 0))
                     {
+                        result2 += " Anger with accuracy of " + av + " %";
+
                         if ((av - fv <= 20) || (av - hv <= 20) || (av - dv <= 20) || (av - sav <= 20) || (av - suv <= 20))
                         {
+                            Boolean[] bools = new Boolean[5];
+                            bools[0] = av - fv <= 20;
+                            bools[1] = av - hv <= 20;
+                            bools[2] = av - dv <= 20;
+                            bools[3] = av - sav <= 20;
+                            bools[4] = av - suv <= 20;
+
+                            result3[0] = "fv";
+                            result3[1] = "hv";
+                            result3[2] = "dv";
+                            result3[3] = "sav";
+                            result3[4] = "suv";
+
+                            MessageBox.Show(overlapping(bools, "av", result3));
+                            label11.Visible = true;
+                            label11.Refresh();
+                            audio = true;
+                            filepath = @"C:\Users\Rana\Desktop\avgdata\audio-classification\" + inputfile.Substring(28, 8) + ".mp3";
+                            convertToMP3(filepath);
+                            File.WriteAllText("C:\\Users\\Rana\\Documents\\Visual Studio 2015\\Projects\\new vid\\filepath.txt", filepath);
                             run_cmd("C:\\Python27\\python.exe", "C:\\Users\\Rana\\Downloads\\ali.py  filepath");
                         }
                         else
                         {
                             label1.Text = "ANGER";
                             filepath = @"C:\Users\Rana\Desktop\avgdata\Anger\" + inputfile.Substring(28, 8) + ".mp3";
+                            label2.Text = result2;
                         }
                     }
                     else
                     {
                         if ((index1 == 2) && (emo1[index1] != 0))
                         {
+                            result2 += " Disgust with accuracy of " + dv + " %";
+
                             if ((dv - av <= 20) || (dv - hv <= 20) || (dv - fv <= 20) || (dv - sav <= 20) || (dv - suv <= 20))
                             {
+                                Boolean[] bools = new Boolean[5];
+                                bools[0] = dv - av <= 20;
+                                bools[1] = dv - hv <= 20;
+                                bools[2] = dv - fv <= 20;
+                                bools[3] = dv - sav <= 20;
+                                bools[4] = dv - suv <= 20;
+
+                                result3[0] = "av";
+                                result3[1] = "hv";
+                                result3[2] = "fv";
+                                result3[3] = "sav";
+                                result3[4] = "suv";
+
+                                MessageBox.Show(overlapping(bools, "dv", result3));
+
+
+                                label11.Visible = true;
+                                label11.Refresh();
+                                audio = true;
+                                filepath = @"C:\Users\Rana\Desktop\avgdata\audio-classification\" + inputfile.Substring(28, 8) + ".mp3";
+                                convertToMP3(filepath);
+                                File.WriteAllText("C:\\Users\\Rana\\Documents\\Visual Studio 2015\\Projects\\new vid\\filepath.txt", filepath);
                                 run_cmd("C:\\Python27\\python.exe", "C:\\Users\\Rana\\Downloads\\ali.py  filepath");
                             }
                             else
                             {
                                 label1.Text = "DISGUST";
                                 filepath = @"C:\Users\Rana\Desktop\avgdata\Disgust\" + inputfile.Substring(28, 8) + ".mp3";
+                                label2.Text = result2;
                             }
                         }
                         else
                         {
                             if ((index1 == 3) && (emo1[index1] != 0))
                             {
+                                result2 += " Happy with accuracy of " + hv + " %";
+
                                 if ((hv - av <= 20) || (hv - fv <= 20) || (hv - dv <= 20) || (hv - sav <= 20) || (hv - suv <= 20))
                                 {
-                                run_cmd("C:\\Python27\\python.exe", "C:\\Users\\Rana\\Downloads\\ali.py  filepath");
+                                    Boolean[] bools = new Boolean[5];
+                                    bools[0] = hv - av <= 20;
+                                    bools[1] = hv - fv <= 20;
+                                    bools[2] = hv - dv <= 20;
+                                    bools[3] = hv - sav <= 20;
+                                    bools[4] = hv - suv <= 20;
+
+                                    result3[0] = "av";
+                                    result3[1] = "fv";
+                                    result3[2] = "dv";
+                                    result3[3] = "sav";
+                                    result3[4] = "suv";
+
+                                    MessageBox.Show(overlapping(bools, "hv", result3));
+                                    label11.Visible = true;
+                                    label11.Refresh();
+                                    audio = true;
+                                    filepath = @"C:\Users\Rana\Desktop\avgdata\audio-classification\" + inputfile.Substring(28, 8) + ".mp3";
+                                    convertToMP3(filepath);
+                                    File.WriteAllText("C:\\Users\\Rana\\Documents\\Visual Studio 2015\\Projects\\new vid\\filepath.txt", filepath);
+                                    run_cmd("C:\\Python27\\python.exe", "C:\\Users\\Rana\\Downloads\\ali.py  filepath");
                                 }
                                 else
                                 {
-                                label1.Text = "HAPPY";
-                                filepath = @"C:\Users\Rana\Desktop\avgdata\Joy\" + inputfile.Substring(28, 8) + ".mp3";
+                                    label1.Text = "HAPPY";
+                                    filepath = @"C:\Users\Rana\Desktop\avgdata\Joy\" + inputfile.Substring(28, 8) + ".mp3";
+                                    label2.Text = result2;
                                 }
                             }
                             else
                             {
                                 if ((index1 == 4) && (emo1[index1] != 0))
                                 {
+                                    result2 += " Surprise with accuracy of " + suv + " %";
+
                                     if ((suv - av <= 20) || (suv - hv <= 20) || (suv - dv <= 20) || (suv - sav <= 20) || (suv - fv <= 20))
                                     {
+                                        Boolean[] bools = new Boolean[5];
+                                        bools[0] = suv - av <= 20;
+                                        bools[1] = suv - hv <= 20;
+                                        bools[2] = suv - dv <= 20;
+                                        bools[3] = suv - sav <= 20;
+                                        bools[4] = suv - fv <= 20;
+
+                                        result3[0] = "av";
+                                        result3[1] = "hv";
+                                        result3[2] = "dv";
+                                        result3[3] = "sav";
+                                        result3[4] = "fv";
+
+                                        MessageBox.Show(overlapping(bools, "suv", result3));
+                                        label11.Visible = true;
+                                        label11.Refresh();
+                                        audio = true;
+                                        filepath = @"C:\Users\Rana\Desktop\avgdata\audio-classification\" + inputfile.Substring(28, 8) + ".mp3";
+                                        convertToMP3(filepath);
+                                        File.WriteAllText("C:\\Users\\Rana\\Documents\\Visual Studio 2015\\Projects\\new vid\\filepath.txt", filepath);
                                         run_cmd("C:\\Python27\\python.exe", "C:\\Users\\Rana\\Downloads\\ali.py  filepath");
                                     }
                                     else
                                     {
                                         label1.Text = "SURPRISE";
                                         filepath = @"C:\Users\Rana\Desktop\avgdata\Surprise\" + inputfile.Substring(28, 8) + ".mp3";
+                                        label2.Text = result2;
                                     }
                                 }
                                 else
                                 {
                                     if ((index1 == 5) && (emo1[index1] != 0))
                                     {
+                                        result2 += " Sad with accuracy of " + sav + " %";
                                         if ((sav - av <= 20) || (sav - hv <= 20) || (sav - dv <= 20) || (sav - fv <= 20) || (sav - suv <= 20))
                                         {
-                                            run_cmd("C:\\Python27\\python.exe", "C:\\Users\\Rana\\Downloads\\ali.py  filepath");
+                                            Boolean[] bools=new Boolean[5];
+                                            bools[0] = sav - av <= 20;
+                                            bools[1] = sav - hv <= 20;
+                                            bools[2] = sav - dv <= 20;
+                                            bools[3] = sav - fv <= 20;
+                                            bools[4] = sav - suv <= 20;
+
+                                            result3[0] = "av";
+                                            result3[1] = "hv";
+                                            result3[2] = "dv";
+                                            result3[3] = "fv";
+                                            result3[4] = "suv";
+
+                                            MessageBox.Show(overlapping(bools, "sav", result3));
+                                            label11.Visible = true;
+                                            label11.Refresh();
+                                            audio = true;
+                                            filepath = @"C:\Users\Rana\Desktop\avgdata\audio-classification\" + inputfile.Substring(28, 8) + ".mp3";
+                                            convertToMP3(filepath);
+                                            File.WriteAllText("C:\\Users\\Rana\\Documents\\Visual Studio 2015\\Projects\\new vid\\filepath.txt", filepath);
+                                            run_cmd("C:\\Python27\\python.exe", "C:\\Users\\Rana\\Downloads\\ali.py filepath");
                                         }
                                         else
                                         {
                                             label1.Text = "SAD";
                                             filepath = @"C:\Users\Rana\Desktop\avgdata\Sadness\" + inputfile.Substring(28, 8) + ".mp3";
+                                            label2.Text = result2;
                                         }
                                     }
                                     else
                                     {
+                                        result2 += "Neutral";
                                         label1.Text = "Neutral";
                                         filepath = @"C:\Users\Rana\Desktop\avgdata\Neutral\" + inputfile.Substring(28, 8) + ".mp3";
+                                        label2.Text = result2;
+
                                     }
                                 }
                             }
@@ -626,14 +777,42 @@ namespace proj2
 
                 System.Console.WriteLine("done");
                 System.Console.WriteLine(filepath);
-                convertToMP3(filepath);
+
             }
+
+
+            if (audio)
+            {
+                Console.WriteLine("working");
+                result4 = result2.Split(new char[0]);
+                facialEmotion = result4[9];
+                facialResult = Int32.Parse(result4[13]);
+                result4 = label2.Text.Split(new char[0]);
+                audioEmotion = result4[9];
+                audioResult = Int32.Parse(result4[13]);
+
+                if (audioResult > facialResult)
+                {
+                    saveAsPerEmo(audioEmotion);
+                }
+                else
+                {
+                    saveAsPerEmo(facialEmotion);
+                }
+
+            }
+            else
+            {
+                convertToMP3(filepath);
+                MessageBox.Show("saved to " + filepath);
+            }
+            File.WriteAllText("C:\\Users\\Rana\\Documents\\Visual Studio 2015\\Projects\\new vid\\filepath.txt", String.Empty);
         }
 
         public void convertToMP3(string outpath)
         {
             var ffMpeg = new NReco.VideoConverter.FFMpegConverter();
-            ffMpeg.ConvertMedia(inputfile,outpath, "mp3");
+            ffMpeg.ConvertMedia(inputfile, outpath, "mp3");
         }
 
         public int calculateAverage(ArrayList y)
@@ -641,7 +820,7 @@ namespace proj2
             float sum = 0;
             for (int i = 0; i < y.Count; i++)
             {
-                sum += (float) y[i];
+                sum += (float)y[i];
             }
             return (int)sum / y.Count;
         }
@@ -658,18 +837,76 @@ namespace proj2
                 using (StreamReader reader = process.StandardOutput)
                 {
                     string result = reader.ReadToEnd();
+                    Console.WriteLine("i'm the result");
                     Console.Write(result);
+                    label2.Text = result;
+                    label12.Text = result2;
                 }
             }
         }
-        
+
+        private void saveAsPerEmo(String emo)
+        {
+            if (emo == "Sad")
+            {
+                filepath = @"C:\Users\Rana\Desktop\avgdata\Sadness\" + inputfile.Substring(28, 8) + ".mp3";
+
+            }
+            else
+            {
+                if (emo == "Surprise")
+                {
+                    filepath = @"C:\Users\Rana\Desktop\avgdata\Surprise\" + inputfile.Substring(28, 8) + ".mp3";
+                }
+                else
+                {
+                    if (emo == "Happy")
+                    {
+                        filepath = @"C:\Users\Rana\Desktop\avgdata\Joy\" + inputfile.Substring(28, 8) + ".mp3";
+                    }
+                    else
+                    {
+                        if (emo == "Disgust")
+                        {
+                            filepath = @"C:\Users\Rana\Desktop\avgdata\Disgust\" + inputfile.Substring(28, 8) + ".mp3";
+                        }
+                        else
+                        {
+                            if (emo == "Anger")
+                            {
+                                filepath = @"C:\Users\Rana\Desktop\avgdata\Anger\" + inputfile.Substring(28, 8) + ".mp3";
+                            }
+                            else
+                            {
+                                if (emo == "Fear")
+                                {
+                                    filepath = @"C:\Users\Rana\Desktop\avgdata\Fear\" + inputfile.Substring(28, 8) + ".mp3";
+                                }
+                                else
+                                {
+                                    if ((emo == "Bored") || (emo == "Neutral"))
+                                    {
+                                        filepath = @"C:\Users\Rana\Desktop\avgdata\Neutral\" + inputfile.Substring(28, 8) + ".mp3";
+                                    } else
+                                    {
+                                        Console.WriteLine("Emotion Error");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            convertToMP3(filepath);
+            MessageBox.Show("saved to " + filepath);
+        }
+
         private void button3_Click(object sender, EventArgs e)
         {
             try
             {
                 Console.WriteLine("hi baby");
                 OpenFileDialog openFileDialog1 = new OpenFileDialog();
-                Console.WriteLine("hi bitch");
                 Console.WriteLine(openFileDialog1.ShowDialog());
                 if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
@@ -678,8 +915,63 @@ namespace proj2
                     inputfile = strfilename;
                 }
             }
-            catch(Exception e1)
+            catch (Exception e1)
             { Console.Write("error baby"); }
+        }
+
+        private string overlapping(Boolean [] x,string main,string [] y)
+        {
+            int index=0;
+            for(int i = 0; i < x.Length; ++i)
+           {
+                if (x[i])
+                {
+                    index = i;
+                    break;
+                }
+            }
+ 
+            return "Inaccuracy of interpretation between "+ getEmotion(main)+ " and "+ getEmotion(y[index]);
+        }
+
+        private string getEmotion(string x)
+        {
+            if(x=="av")
+            return "Anger";
+            else
+            {
+
+                if (x == "hv")
+                return "Happy";
+                else
+                {
+
+                    if (x == "dv")
+                    return "Disgust";
+                    else
+                    {
+
+                        if (x == "fv")
+                        return "Fear";
+                        else
+                        {
+
+                            if (x == "sav")
+                            return "Sad";
+                            else
+                            {
+
+                                if (x == "suv")
+                                return "Surprise";
+                                else
+                                {
+                                    return "";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
